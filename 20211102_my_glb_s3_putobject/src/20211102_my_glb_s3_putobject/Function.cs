@@ -11,7 +11,7 @@ using Amazon.S3;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace my_glb_s3_putobjectasync_20211102
+namespace _20211102_my_glb_s3_putobject
 {
     public class Function
     {
@@ -87,10 +87,10 @@ namespace my_glb_s3_putobjectasync_20211102
 
         #region result code
 
-        public const string RESULT_CODE_SUCCESS = "0000";
-        public const string RESULT_CODE_ERROR = "9999";
+        public const string RESULT_CODE_SUCCESS    = "0000";
+        public const string RESULT_CODE_ERROR      = "9999";
         public const string RESULT_MESSAGE_SUCCESS = "SUCCESS";
-        public const string RESULT_MESSAGE_ERROR = "ERROR OCCURED";
+        public const string RESULT_MESSAGE_ERROR   = "ERROR OCCURED";
 
         public static ReadOnlyDictionary<string, string> GetResultCodeDictionary()
         {
@@ -99,7 +99,7 @@ namespace my_glb_s3_putobjectasync_20211102
                 var resultCodeDictionary = new Dictionary<string, string>
                 {
                     { RESULT_CODE_SUCCESS, RESULT_MESSAGE_SUCCESS },
-                    { RESULT_CODE_ERROR, RESULT_MESSAGE_ERROR },
+                    { RESULT_CODE_ERROR,   RESULT_MESSAGE_ERROR   },
                 };
 
                 var resultCodeDictionaryRo = new ReadOnlyDictionary<string, string>( resultCodeDictionary );
