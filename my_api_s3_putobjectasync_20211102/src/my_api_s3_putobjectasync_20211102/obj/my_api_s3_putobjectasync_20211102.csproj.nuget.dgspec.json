@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj": {}
+    "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj": {}
   },
   "projects": {
-    "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj": {
+    "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj",
+        "projectUniqueName": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj",
         "projectName": "my_api_s3_putobjectasync_20211102",
-        "projectPath": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj",
+        "projectPath": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj",
         "packagesPath": "C:\\Users\\nomu\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\obj\\",
+        "outputPath": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nomu\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -69,6 +69,11 @@
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "linux-x64": {
+          "#import": []
         }
       }
     }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dGhSi/V6ZH4nLYMoN+XU8eX+ZvW1qF9E9N0uCwV1RMPqn0VHs1qsPMg81nrMX2AI0nXmhFQj6IKmGiNXLAR2mQ==",
+  "dgSpecHash": "JVn7yWHQ/p/thNcDVsVc//LxuPJTMCkknDE0SFnh4tL7c9aQvbqqi7zXhA67JCr0CmhqDZNL93Gqm8Y9yVeqag==",
   "success": true,
-  "projectFilePath": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj",
+  "projectFilePath": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nomu\\.nuget\\packages\\amazon.lambda.core\\2.0.0\\amazon.lambda.core.2.0.0.nupkg.sha512",
     "C:\\Users\\nomu\\.nuget\\packages\\amazon.lambda.serialization.systemtextjson\\2.1.0\\amazon.lambda.serialization.systemtextjson.2.1.0.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj": {}
+    "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj": {}
   },
   "projects": {
-    "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj": {
+    "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj",
+        "projectUniqueName": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj",
         "projectName": "my_api_s3_putobjectasync_20211102",
-        "projectPath": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj",
+        "projectPath": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj",
         "packagesPath": "C:\\Users\\nomu\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\obj\\",
+        "outputPath": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nomu\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -72,14 +72,14 @@
         }
       }
     },
-    "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj": {
+    "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj",
         "projectName": "my_api_s3_putobjectasync_20211102.Tests",
-        "projectPath": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj",
+        "projectPath": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\my_api_s3_putobjectasync_20211102.Tests.csproj",
         "packagesPath": "C:\\Users\\nomu\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\obj\\",
+        "outputPath": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\test\\my_api_s3_putobjectasync_20211102.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nomu\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -96,8 +96,8 @@
           "netcoreapp3.1": {
             "targetAlias": "netcoreapp3.1",
             "projectReferences": {
-              "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj": {
-                "projectPath": "c:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj"
+              "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj": {
+                "projectPath": "C:\\Users\\nomu\\Documents\\04_blog\\my_api_s3_putobjectasync_20211102\\src\\my_api_s3_putobjectasync_20211102\\my_api_s3_putobjectasync_20211102.csproj"
               }
             }
           }
