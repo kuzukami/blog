@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Xunit;
-using Amazon.Lambda.Core;
 using Amazon.Lambda.TestUtilities;
-
-using my_glb_s3_putobjectasync_20211102;
 
 namespace my_glb_s3_putobjectasync_20211102.Tests
 {
@@ -22,7 +14,7 @@ namespace my_glb_s3_putobjectasync_20211102.Tests
             var context = new TestLambdaContext();
             var upperCase = function.FunctionHandler("hello world", context);
 
-            Assert.Equal("HELLO WORLD", upperCase);
+            Assert.Equal("HELLO WORLD", "");
         }
     }
 }
