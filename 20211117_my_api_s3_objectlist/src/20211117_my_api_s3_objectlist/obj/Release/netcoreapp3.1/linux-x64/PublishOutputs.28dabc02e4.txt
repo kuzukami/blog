@@ -1,8 +1,0 @@
-C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_objectlist\src\20211117_my_api_s3_objectlist\bin\Release\netcoreapp3.1\publish\20211117_my_api_s3_objectlist.dll
-C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_objectlist\src\20211117_my_api_s3_objectlist\bin\Release\netcoreapp3.1\publish\20211117_my_api_s3_objectlist.deps.json
-C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_objectlist\src\20211117_my_api_s3_objectlist\bin\Release\netcoreapp3.1\publish\20211117_my_api_s3_objectlist.runtimeconfig.json
-C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_objectlist\src\20211117_my_api_s3_objectlist\bin\Release\netcoreapp3.1\publish\20211117_my_api_s3_objectlist.pdb
-C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_objectlist\src\20211117_my_api_s3_objectlist\bin\Release\netcoreapp3.1\publish\Amazon.Lambda.Core.dll
-C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_objectlist\src\20211117_my_api_s3_objectlist\bin\Release\netcoreapp3.1\publish\Amazon.Lambda.Serialization.SystemTextJson.dll
-C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_objectlist\src\20211117_my_api_s3_objectlist\bin\Release\netcoreapp3.1\publish\AWSSDK.Core.dll
-C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_objectlist\src\20211117_my_api_s3_objectlist\bin\Release\netcoreapp3.1\publish\AWSSDK.Lambda.dll

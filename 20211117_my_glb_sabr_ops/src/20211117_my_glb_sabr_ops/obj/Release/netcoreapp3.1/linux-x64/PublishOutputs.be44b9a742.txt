@@ -1,6 +1,0 @@
-C:\Users\nomu\Documents\04_blog\20211117_my_glb_sabr_ops\src\20211117_my_glb_sabr_ops\bin\Release\netcoreapp3.1\publish\20211117_my_glb_sabr_ops.dll
-C:\Users\nomu\Documents\04_blog\20211117_my_glb_sabr_ops\src\20211117_my_glb_sabr_ops\bin\Release\netcoreapp3.1\publish\20211117_my_glb_sabr_ops.deps.json
-C:\Users\nomu\Documents\04_blog\20211117_my_glb_sabr_ops\src\20211117_my_glb_sabr_ops\bin\Release\netcoreapp3.1\publish\20211117_my_glb_sabr_ops.runtimeconfig.json
-C:\Users\nomu\Documents\04_blog\20211117_my_glb_sabr_ops\src\20211117_my_glb_sabr_ops\bin\Release\netcoreapp3.1\publish\20211117_my_glb_sabr_ops.pdb
-C:\Users\nomu\Documents\04_blog\20211117_my_glb_sabr_ops\src\20211117_my_glb_sabr_ops\bin\Release\netcoreapp3.1\publish\Amazon.Lambda.Core.dll
-C:\Users\nomu\Documents\04_blog\20211117_my_glb_sabr_ops\src\20211117_my_glb_sabr_ops\bin\Release\netcoreapp3.1\publish\Amazon.Lambda.Serialization.SystemTextJson.dll
