@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "msfCirxKoeKuPN77sMabPBHTwhHMkb73Nxon7B+rJACr5tzi1y6G+IA7lsC4jccfMVLppz/Jnc5oBHeYFZIa+g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\nomu\\Documents\\04_blog\\20211117_my_glb_s3_objectlist\\src\\20211117_my_glb_s3_objectlist\\20211117_my_glb_s3_objectlist.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\nomu\\.nuget\\packages\\amazon.lambda.core\\2.0.0\\amazon.lambda.core.2.0.0.nupkg.sha512",
+    "C:\\Users\\nomu\\.nuget\\packages\\amazon.lambda.serialization.systemtextjson\\2.1.0\\amazon.lambda.serialization.systemtextjson.2.1.0.nupkg.sha512",
+    "C:\\Users\\nomu\\.nuget\\packages\\awssdk.core\\3.7.4.4\\awssdk.core.3.7.4.4.nupkg.sha512",
+    "C:\\Users\\nomu\\.nuget\\packages\\awssdk.s3\\3.7.4.6\\awssdk.s3.3.7.4.6.nupkg.sha512"
+  ],
+  "logs": []
+}

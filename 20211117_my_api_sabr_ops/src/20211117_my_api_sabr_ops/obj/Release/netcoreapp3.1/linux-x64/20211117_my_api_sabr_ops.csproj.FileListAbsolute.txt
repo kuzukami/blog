@@ -1,0 +1,17 @@
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.deps.json
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.runtimeconfig.json
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.runtimeconfig.dev.json
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.pdb
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\Amazon.Lambda.Core.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\Amazon.Lambda.Serialization.SystemTextJson.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\AWSSDK.Core.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\bin\Release\netcoreapp3.1\linux-x64\AWSSDK.Lambda.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\obj\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.csproj.AssemblyReference.cache
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\obj\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.AssemblyInfoInputs.cache
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\obj\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.AssemblyInfo.cs
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\obj\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.csproj.CoreCompileInputs.cache
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\obj\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.csproj.CopyComplete
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\obj\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\obj\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.pdb
+C:\Users\nomu\Documents\04_blog\20211117_my_api_sabr_ops\src\20211117_my_api_sabr_ops\obj\Release\netcoreapp3.1\linux-x64\20211117_my_api_sabr_ops.genruntimeconfig.cache

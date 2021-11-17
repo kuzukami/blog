@@ -1,0 +1,8 @@
+C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_signedurl\src\20211117_my_api_s3_signedurl\bin\Release\netcoreapp3.1\publish\20211117_my_api_s3_signedurl.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_signedurl\src\20211117_my_api_s3_signedurl\bin\Release\netcoreapp3.1\publish\20211117_my_api_s3_signedurl.deps.json
+C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_signedurl\src\20211117_my_api_s3_signedurl\bin\Release\netcoreapp3.1\publish\20211117_my_api_s3_signedurl.runtimeconfig.json
+C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_signedurl\src\20211117_my_api_s3_signedurl\bin\Release\netcoreapp3.1\publish\20211117_my_api_s3_signedurl.pdb
+C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_signedurl\src\20211117_my_api_s3_signedurl\bin\Release\netcoreapp3.1\publish\Amazon.Lambda.Core.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_signedurl\src\20211117_my_api_s3_signedurl\bin\Release\netcoreapp3.1\publish\Amazon.Lambda.Serialization.SystemTextJson.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_signedurl\src\20211117_my_api_s3_signedurl\bin\Release\netcoreapp3.1\publish\AWSSDK.Core.dll
+C:\Users\nomu\Documents\04_blog\20211117_my_api_s3_signedurl\src\20211117_my_api_s3_signedurl\bin\Release\netcoreapp3.1\publish\AWSSDK.Lambda.dll
