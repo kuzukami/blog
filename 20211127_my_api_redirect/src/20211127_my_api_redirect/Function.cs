@@ -15,7 +15,7 @@ using Amazon.Lambda.Core;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace _20211127_my_api_getweather
+namespace _20211127_my_api_redirect
 {
     public class Function
     {
@@ -29,17 +29,15 @@ namespace _20211127_my_api_getweather
                 ApiResponse apiResponse                   = new ApiResponse();
                 List<ApiResponseBody> apiResponseBodyList = new List<ApiResponseBody>();
                 ApiResponseBody apiResponseBody           = new ApiResponseBody();
-                Dictionary<string, string> apiResonseHeaders             = new Dictionary<string, string>{{"Access-Control-Allow-Origin", "*"},{"Access-Control-Allow-Headers", "Content-Type"}, {"Access-Control-Allow-Methods", "GET"}};
+                Dictionary<string, string> apiResonseHeaders             = new Dictionary<string, string>{{"Access-Control-Allow-Origin", "*"},{"Access-Control-Allow-Headers", "Content-Type"}, {"Access-Control-Allow-Methods", "GET"}, {"Location", "https://www.nomurabbit.com/"}};
                 Dictionary<string, string[]> apiResonseMultiValueHeaders = new Dictionary<string, string[]>{{"Set-Cookie", new string[] {"KEY1=VALUE1; SameSite=None", "KEY2=VALUE2; SameSite=None"}}};
                 
                 apiResponse.IsBase64Encoded   = false;
-                apiResponse.StatusCode        = HttpStatusCode.OK;
+                apiResponse.StatusCode        = HttpStatusCode.Redirect;
                 apiResponse.Headers           = apiResonseHeaders;
                 apiResponse.MultiValueHeaders = apiResonseMultiValueHeaders;
 
-                string lineNotifyResponse = GetWeather().Result;
-
-                apiResponse.Body = lineNotifyResponse;
+                apiResponse.Body = "";
 
                 return apiResponse;
             }
@@ -59,32 +57,6 @@ namespace _20211127_my_api_getweather
                 apiResponse.Body              = JsonSerializer.Serialize(apiResponseBody);
 
                 return apiResponse;
-            }
-        }
-
-        private async Task<string> GetWeather()
-        {
-            try
-            {
-                string returnString = "";
-
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage())
-                {
-                    request.RequestUri = new Uri("https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json");
-                    request.Method     = HttpMethod.Get;
-
-                    using (HttpResponseMessage response = client.SendAsync(request).Result)
-                    {
-                        returnString = response.Content.ReadAsStringAsync().Result;
-                    }
-                }
-
-                return returnString;
-            }
-            catch (System.Exception e)
-            {
-                throw e;
             }
         }
     }
