@@ -23,7 +23,7 @@ namespace _20211128_my_api_redirect_param_src
         {
             try
             {
-                string redirectUrl = "https://d34rs0sv14b8aw.cloudfront.net/api/redirectparamdst";
+                string redirectUrl = "https://hogehoge.com/redirectparamdst";
                 string redirectParam = "?userid=nomurabbit";
 
                 ApiRequest apiRequest         = JsonSerializer.Deserialize<ApiRequest>(input.ToString(), ApiUtil.GetJsonSerializerOptionsDefault());
