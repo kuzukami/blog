@@ -107,7 +107,9 @@ namespace _20211129_my_api_line_notify_token_dst
 
                 LineNotifyResponse lineNotifyResponse = JsonSerializer.Deserialize<LineNotifyResponse>(responseContent, ApiUtil.GetJsonSerializerOptionsDefault());
 
-                return responseContent;
+                // lineNotifyResponse から access_token を取り出して、システム側で保管する
+
+                return lineNotifyResponse.Message;
             }
             catch (System.Exception e)
             {
@@ -397,11 +399,11 @@ namespace _20211129_my_api_line_notify_token_dst
 
     public class LineNotifyResponse
     {
-        // [JsonPropertyName("status")]
-        // public string Status { get; set; }
+        [JsonPropertyName("status")]
+        public int Status { get; set; }
 
-        // [JsonPropertyName("message")]
-        // public string Message { get; set; }
+        [JsonPropertyName("message")]
+        public string Message { get; set; }
 
         [JsonPropertyName("access_token")]
         public string AccessToken { get; set; }
