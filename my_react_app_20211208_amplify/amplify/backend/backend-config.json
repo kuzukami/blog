@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "myreactapp20211208amfd1e793c": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}
