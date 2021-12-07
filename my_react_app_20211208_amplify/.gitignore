@@ -42,3 +42,6 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+#add 20211207
+team-provider-info.json
