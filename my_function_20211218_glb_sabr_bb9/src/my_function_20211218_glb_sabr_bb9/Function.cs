@@ -56,12 +56,12 @@ namespace my_function_20211218_glb_sabr_bb9
                 int argWalks            = int.Parse(glbRequestBody.Walks);
                 double argInningPitched = double.Parse(glbRequestBody.InningPitched);
 
-                double bbk = 1.0 * argWalks / argInningPitched * 9;
+                double bb9 = 1.0 * argWalks / argInningPitched * 9;
 
                 GlbResponseBody glbResponseBody = new GlbResponseBody();
 
                 // calc bb9
-                glbResponseBody.Bb9 = (bbk).ToString("F3");
+                glbResponseBody.Bb9 = (bb9).ToString("F3");
 
                 return glbResponseBody;
             }
