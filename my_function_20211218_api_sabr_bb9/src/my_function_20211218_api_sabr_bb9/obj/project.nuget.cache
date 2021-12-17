@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "hyRkxlCN0TRuU4/6CE8+Qpkl1JWC/ejkzjWvXE41Ru9Gl79oWmrCxUEmx0ZQqrNyfN6dDjG0KJQ7iVPRQK4/Aw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\nomu\\Documents\\04_blog\\my_function_20211218_api_sabr_bb9\\src\\my_function_20211218_api_sabr_bb9\\my_function_20211218_api_sabr_bb9.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\nomu\\.nuget\\packages\\amazon.lambda.core\\2.1.0\\amazon.lambda.core.2.1.0.nupkg.sha512",
+    "C:\\Users\\nomu\\.nuget\\packages\\amazon.lambda.serialization.systemtextjson\\2.2.0\\amazon.lambda.serialization.systemtextjson.2.2.0.nupkg.sha512",
+    "C:\\Users\\nomu\\.nuget\\packages\\awssdk.core\\3.7.5.6\\awssdk.core.3.7.5.6.nupkg.sha512",
+    "C:\\Users\\nomu\\.nuget\\packages\\awssdk.lambda\\3.7.8.4\\awssdk.lambda.3.7.8.4.nupkg.sha512"
+  ],
+  "logs": []
+}

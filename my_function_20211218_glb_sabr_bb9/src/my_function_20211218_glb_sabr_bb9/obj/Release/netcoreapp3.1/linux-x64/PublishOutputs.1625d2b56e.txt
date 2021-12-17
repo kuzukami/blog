@@ -1,0 +1,6 @@
+C:\Users\nomu\Documents\04_blog\my_function_20211218_glb_sabr_bb9\src\my_function_20211218_glb_sabr_bb9\bin\Release\netcoreapp3.1\publish\my_function_20211218_glb_sabr_bb9.dll
+C:\Users\nomu\Documents\04_blog\my_function_20211218_glb_sabr_bb9\src\my_function_20211218_glb_sabr_bb9\bin\Release\netcoreapp3.1\publish\my_function_20211218_glb_sabr_bb9.deps.json
+C:\Users\nomu\Documents\04_blog\my_function_20211218_glb_sabr_bb9\src\my_function_20211218_glb_sabr_bb9\bin\Release\netcoreapp3.1\publish\my_function_20211218_glb_sabr_bb9.runtimeconfig.json
+C:\Users\nomu\Documents\04_blog\my_function_20211218_glb_sabr_bb9\src\my_function_20211218_glb_sabr_bb9\bin\Release\netcoreapp3.1\publish\my_function_20211218_glb_sabr_bb9.pdb
+C:\Users\nomu\Documents\04_blog\my_function_20211218_glb_sabr_bb9\src\my_function_20211218_glb_sabr_bb9\bin\Release\netcoreapp3.1\publish\Amazon.Lambda.Core.dll
+C:\Users\nomu\Documents\04_blog\my_function_20211218_glb_sabr_bb9\src\my_function_20211218_glb_sabr_bb9\bin\Release\netcoreapp3.1\publish\Amazon.Lambda.Serialization.SystemTextJson.dll
