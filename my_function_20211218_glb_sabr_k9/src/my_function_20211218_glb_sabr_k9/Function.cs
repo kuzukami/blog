@@ -61,7 +61,7 @@ namespace my_function_20211218_glb_sabr_k9
                 GlbResponseBody glbResponseBody = new GlbResponseBody();
 
                 // calc k9
-                glbResponseBody.K9 = (k9).ToString("F3");
+                glbResponseBody.K9 = (k9).ToString("F2");
 
                 return glbResponseBody;
             }
