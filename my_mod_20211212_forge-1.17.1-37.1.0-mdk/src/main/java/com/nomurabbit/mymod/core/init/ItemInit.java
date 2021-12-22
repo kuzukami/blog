@@ -26,7 +26,7 @@ public final class ItemInit {
             () -> new Item(new Item.Properties().tab(TUTORIAL_TAB).fireResistant()));
 
     public static final RegistryObject<Item> EXAMPLE_SWORD = ITEMS.register("example_sword",
-            () -> new SwordItem(Tiers.NETHERITE, 195, -2.4F,
+            () -> new SwordItem(Tiers.NETHERITE, 5, -2.4F,
                     (new Item.Properties().tab(TUTORIAL_TAB).fireResistant())));
 
     private ItemInit() {
