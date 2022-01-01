@@ -29,6 +29,10 @@ public final class ItemInit {
             () -> new SwordItem(Tiers.NETHERITE, 5, -2.4F,
                     (new Item.Properties().tab(TUTORIAL_TAB).fireResistant())));
 
+    public static final RegistryObject<Item> ULTIMATE_HAGOITA = ITEMS.register("ultimate_hagoita",
+            () -> new SwordItem(Tiers.NETHERITE, 994, -2.4F,
+                    (new Item.Properties().tab(TUTORIAL_TAB).fireResistant())));
+
     private ItemInit() {
     }
 }
