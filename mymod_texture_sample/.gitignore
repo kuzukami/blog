@@ -1,5 +1,4 @@
 *
 !/*.json
-!/*.png
-!ultimate_hagoita/*.png
+!*.png
 !/.gitignore
