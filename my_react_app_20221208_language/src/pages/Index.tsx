@@ -43,14 +43,8 @@ const StyledHeaderSpan = styled("span")(({ theme }) => ({
 //
 const Index: React.FC = () => {
 
-  //---------------------------------------------------------------------
-  // context
-  //
   const {isEnglish} = useGlobalSetting();
 
-  //-----------------------------------------------------------------------
-  // context
-  //
   return (
     <GlobalHeader>
       <Grid container>

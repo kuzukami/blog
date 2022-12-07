@@ -16,15 +16,9 @@ export interface IGlobalContextProviderParams {
 //
 export const GlobalContextProvider = (props: IGlobalContextProviderParams) => {
 
-  //---------------------------------------------------------------------
-  // context
-  //
   const [cookies, setCookie] = useCookies(["language"]);
   const [isEnglish, setIsEnglish] = React.useState<boolean>((cookies.language == "en"));
 
-  //---------------------------------------------------------------------
-  // method
-  //
   const setLanguage = (): void => {
     setIsEnglish(!isEnglish);
     var expDate = new Date();
@@ -32,9 +26,6 @@ export const GlobalContextProvider = (props: IGlobalContextProviderParams) => {
     setCookie("language", (!isEnglish ? "en" : "ja"), {expires: expDate, path: '/'});
   }
 
-  //---------------------------------------------------------------------
-  // main
-  //
   return (
     <GlobalContext.Provider value={{
       isEnglish,
