@@ -1,0 +1,5 @@
+yarn create react-app my_react_app_20221208_language --template typescript
+
+yarn add react-router-dom
+yarn add @mui/material @emotion/react @emotion/styled @mui/icons-material
+yarn add react-cookie
