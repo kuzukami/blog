@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 using Amazon.Lambda;
 using Amazon.Lambda.Core;
@@ -59,15 +60,60 @@ namespace _20211129_my_api_line_notify_token_src
                 return apiResponse;
             }
         }
+        private string enforceEnvVar( String envkey ){
+                var environmentvalNullable = Environment.GetEnvironmentVariable(envkey);
+
+                if ( environmentvalNullable == null ){
+                    throw new Exception("必要な環境変数が設定されていません" + envkey);
+                }
+
+
+                return environmentvalNullable;
+        }
+
+        private byte[] utf8bytes(String val ){
+            return Encoding.UTF8.GetBytes(val);
+        }
+        private string computeHMACForUTF8String( string targetString, string hmacKey ){
+                using (var hmacSha512 = new System.Security.Cryptography.HMACSHA512( utf8bytes(hmacKey)) )
+                {
+                    byte[] hashValue = hmacSha512.ComputeHash( utf8bytes(targetString));
+                    // Console.WriteLine(BitConverter.ToString(hashValue).Replace("-", "").ToLower());
+                    var hash = new StringBuilder();
+                    foreach (var theByte in hashValue)
+                    {
+                        hash.Append(theByte.ToString("x2"));
+                    }
+                    return  hash;
+                }
+        }
+
+        private string computeSignedState(){
+                var stateSignKey = enforceEnvVar("LINECOL_STATE_SIGN_KEY");//SHA512でデッドラインSignedを行う
+                var stateValidPeriod = enforceEnvVar("LINECOL_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
+
+                var nowx = DateTime.Now;
+
+                var unixnow = new DateTimeOffset(nowx).ToUnixTimeSeconds();
+
+                var extendedValidEndUnitSec = unixnow + long.Parse(stateValidPeriod);
+
+                var extendedValidEnd = DateTimeOffset.FromUnixTimeSeconds(extendedValidEndUnitSec);
+
+                var extendedValidEndString = extendedValidEnd.Date.ToString("yyyyMMddHHmmss");
+
+                var signedValidEnd =  extendedValidEndString + computeHMACForUTF8String( extendedValidEndString, stateSignKey );
+
+                return signedValidEnd;
+        }
 
         private string LineNotifyRedirect()
         {
             try
             {
-                string returnString = "";
-                string client_id    = "";
-                string redirect_uri = "";
-                string state        = "";
+                string client_id    = enforceEnvVar("LINNOCOL_CLIENT_ID");//"管理画面から取得してね！";
+                string redirect_uri = enforceEnvVar("LINNOCOL_REDIRECT_URI"); //"API2のURLを指定してね！"
+                string state        = computeSignedState(); //"LINE notify APIからAPI2にリダイレクトされるときに渡してくれるパラメータだよ。送信元の認証に使えるかも！"
 
                 var parameters = new Dictionary<string, string>()
                 {
@@ -79,7 +125,7 @@ namespace _20211129_my_api_line_notify_token_src
                 };
                 string lineNotifyRequestString = new FormUrlEncodedContent(parameters).ReadAsStringAsync().Result;
 
-                returnString = "https://notify-bot.line.me/oauth/authorize?" + lineNotifyRequestString;
+                string returnString = "https://notify-bot.line.me/oauth/authorize?" + lineNotifyRequestString;
 
                 return returnString;
             }
