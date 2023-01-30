@@ -73,6 +73,54 @@ namespace _20211129_my_api_line_notify_token_dst
             }
         }
 
+        private string enforceEnvVar( String envkey ){
+                var environmentvalNullable = Environment.GetEnvironmentVariable(envkey);
+
+                if ( environmentvalNullable == null ){
+                    throw new Exception("必要な環境変数が設定されていません" + envkey);
+                }
+
+
+                return environmentvalNullable;
+        }
+
+        private byte[] utf8bytes(String val ){
+            return Encoding.UTF8.GetBytes(val);
+        }
+        private string computeHMACForUTF8String( string targetString, string hmacKey ){
+                using (var hmacSha512 = new System.Security.Cryptography.HMACSHA512( utf8bytes(hmacKey)) )
+                {
+                    byte[] hashValue = hmacSha512.ComputeHash( utf8bytes(targetString));
+                    // Console.WriteLine(BitConverter.ToString(hashValue).Replace("-", "").ToLower());
+                    var hash = new StringBuilder();
+                    foreach (var theByte in hashValue)
+                    {
+                        hash.Append(theByte.ToString("x2"));
+                    }
+                    return  hash;
+                }
+        }
+
+        private string computeSignedState(){
+                var stateSignKey = enforceEnvVar("LINNOAX_STATE_SIGN_KEY");//SHA512でデッドラインSignedを行う
+                var stateValidPeriod = enforceEnvVar("LINNOAX_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
+
+                var nowx = DateTime.Now;
+
+                var unixnow = new DateTimeOffset(nowx).ToUnixTimeSeconds();
+
+                var extendedValidEndUnitSec = unixnow + long.Parse(stateValidPeriod);
+
+                var extendedValidEnd = DateTimeOffset.FromUnixTimeSeconds(extendedValidEndUnitSec);
+
+                var extendedValidEndString = extendedValidEnd.Date.ToString("yyyyMMddHHmmss");
+
+                var signedValidEnd =  extendedValidEndString + computeHMACForUTF8String( extendedValidEndString, stateSignKey );
+
+                return signedValidEnd;
+        }
+
+
         private async Task<string> LineNotifyRedirect(string code)
         {
             try
@@ -84,9 +132,12 @@ namespace _20211129_my_api_line_notify_token_dst
                 request.RequestUri = new Uri("https://notify-bot.line.me/oauth/token");
                 request.Method     = HttpMethod.Post;
 
-                string redirect_uri  = "";
-                string client_id     = "";
-                string client_secret = "";
+                string redirect_uri  =  enforceEnvVar("LINNOA1_REDIRECT_URI");//redirect_uri	必須	uri	authorization endpoint API に指定した redirect_uri を指定します
+                string client_id    = enforceEnvVar("LINNOAX_CLIENT_ID");//"管理画面から取得してね！";
+                string client_secret =  enforceEnvVar("LINNOAX_CLIENT_SECRET");
+                // string redirect_uri  = "API2のURLを指定してね！";
+                // string client_id     = "管理画面から取得してね！";
+                // string client_secret = "管理画面から取得してね！";
 
                 var parameters = new Dictionary<string, string>()
                 {
@@ -107,6 +158,8 @@ namespace _20211129_my_api_line_notify_token_dst
 
                 LineNotifyResponse lineNotifyResponse = JsonSerializer.Deserialize<LineNotifyResponse>(responseContent, ApiUtil.GetJsonSerializerOptionsDefault());
 
+                var accode = lineNotifyResponse.AccessToken;
+                LambdaLogger.LogDebug("access_token: " + accode);
                 // lineNotifyResponse から access_token を取り出して、システム側で保管する
 
                 return lineNotifyResponse.Message;

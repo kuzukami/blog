@@ -89,8 +89,8 @@ namespace _20211129_my_api_line_notify_token_src
         }
 
         private string computeSignedState(){
-                var stateSignKey = enforceEnvVar("LINECOL_STATE_SIGN_KEY");//SHA512でデッドラインSignedを行う
-                var stateValidPeriod = enforceEnvVar("LINECOL_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
+                var stateSignKey = enforceEnvVar("LINNOAX_STATE_SIGN_KEY");//SHA512でデッドラインSignedを行う
+                var stateValidPeriod = enforceEnvVar("LINNOAX_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
 
                 var nowx = DateTime.Now;
 
@@ -111,8 +111,8 @@ namespace _20211129_my_api_line_notify_token_src
         {
             try
             {
-                string client_id    = enforceEnvVar("LINNOCOL_CLIENT_ID");//"管理画面から取得してね！";
-                string redirect_uri = enforceEnvVar("LINNOCOL_REDIRECT_URI"); //"API2のURLを指定してね！"
+                string client_id    = enforceEnvVar("LINNOAX_CLIENT_ID");//"管理画面から取得してね！";
+                string redirect_uri = enforceEnvVar("LINNOA1_REDIRECT_URI"); //"API2のURLを指定してね！"
                 string state        = computeSignedState(); //"LINE notify APIからAPI2にリダイレクトされるときに渡してくれるパラメータだよ。送信元の認証に使えるかも！"
 
                 var parameters = new Dictionary<string, string>()
