@@ -12,20 +12,22 @@ using System.Security.Cryptography;
 
 using Amazon.Lambda;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.APIGatewayEvents;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+// [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace _20211129_my_api_line_notify_token_src
 {
     public class Function
     {
-        public ApiResponse FunctionHandler(object input, ILambdaContext context)
+        public ApiResponse FunctionHandler(APIGatewayProxyRequest input, ILambdaContext context)
         {
             try
             {
                 ApiRequest apiRequest         = JsonSerializer.Deserialize<ApiRequest>(input.ToString(), ApiUtil.GetJsonSerializerOptionsDefault());
                 ApiRequestBody apiRequestBody = (apiRequest.Body == null) ? new ApiRequestBody() : JsonSerializer.Deserialize<ApiRequestBody>(apiRequest.Body, ApiUtil.GetJsonSerializerOptionsDefault());
+
 
                 ApiResponse apiResponse                   = new ApiResponse();
                 List<ApiResponseBody> apiResponseBodyList = new List<ApiResponseBody>();
@@ -84,7 +86,7 @@ namespace _20211129_my_api_line_notify_token_src
                     {
                         hash.Append(theByte.ToString("x2"));
                     }
-                    return  hash;
+                    return  hash.ToString();
                 }
         }
 

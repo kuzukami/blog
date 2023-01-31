@@ -1,3 +1,7 @@
 *
-!/Function.cs
+!/*.cs
+!/*.md
+!/*.json
+!/*.template
+!/*.csproj
 !/.gitignore
