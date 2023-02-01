@@ -25,14 +25,15 @@ namespace _20211129_my_api_line_notify_token_src
         {
             try
             {
-                ApiRequest apiRequest         = JsonSerializer.Deserialize<ApiRequest>(input.ToString(), ApiUtil.GetJsonSerializerOptionsDefault());
-                ApiRequestBody apiRequestBody = (apiRequest.Body == null) ? new ApiRequestBody() : JsonSerializer.Deserialize<ApiRequestBody>(apiRequest.Body, ApiUtil.GetJsonSerializerOptionsDefault());
+                // ApiRequest apiRequest         = input.Body JsonSerializer.Deserialize<ApiRequest>(input.ToString(), ApiUtil.GetJsonSerializerOptionsDefault());
+                // ApiRequestBody apiRequestBody = (apiRequest.Body == null) ? new ApiRequestBody() : JsonSerializer.Deserialize<ApiRequestBody>(apiRequest.Body, ApiUtil.GetJsonSerializerOptionsDefault());
 
 
                 ApiResponse apiResponse                   = new ApiResponse();
                 List<ApiResponseBody> apiResponseBodyList = new List<ApiResponseBody>();
                 ApiResponseBody apiResponseBody           = new ApiResponseBody();
-                Dictionary<string, string> apiResonseHeaders             = new Dictionary<string, string>{{"Access-Control-Allow-Origin", "*"},{"Access-Control-Allow-Headers", "Content-Type"}, {"Access-Control-Allow-Methods", "GET"}, {"Location", LineNotifyRedirect()}};
+                var redirectURL = LineNotifyRedirect();
+                Dictionary<string, string> apiResonseHeaders             = new Dictionary<string, string>{{"Access-Control-Allow-Origin", "*"},{"Access-Control-Allow-Headers", "Content-Type"}, {"Access-Control-Allow-Methods", "GET"}, {"Location", redirectURL} , {"Content-Type", "application/json; charset=UTF-8"}};
                 Dictionary<string, string[]> apiResonseMultiValueHeaders = new Dictionary<string, string[]>{{"Set-Cookie", new string[] {"KEY1=VALUE1; SameSite=None", "KEY2=VALUE2; SameSite=None"}}};
                 
                 apiResponse.IsBase64Encoded   = false;
@@ -48,15 +49,15 @@ namespace _20211129_my_api_line_notify_token_src
             {
                 ApiResponse apiResponse         = new ApiResponse();
                 ApiResponseBody apiResponseBody = new ApiResponseBody();
-                Dictionary<string, string> apiResonseHeaders             = new Dictionary<string, string>{{"Access-Control-Allow-Origin", "*"},{"Access-Control-Allow-Headers", "Content-Type"}, {"Access-Control-Allow-Methods", "GET"}};
+                Dictionary<string, string> apiResonseHeaders             = new Dictionary<string, string>{{"Access-Control-Allow-Origin", "*"},{"Access-Control-Allow-Headers", "Content-Type"}, {"Access-Control-Allow-Methods", "GET"}, {"Content-Type", "application/json; charset=UTF-8"}};
                 Dictionary<string, string[]> apiResonseMultiValueHeaders = new Dictionary<string, string[]>{{"Set-Cookie", new string[] {"KEY1=VALUE1; SameSite=None", "KEY2=VALUE2; SameSite=None"}}};
                 
                 apiResponse.IsBase64Encoded   = false;
-                apiResponse.StatusCode        = HttpStatusCode.OK;
+                apiResponse.StatusCode        = HttpStatusCode.InternalServerError;
                 apiResponse.Headers           = apiResonseHeaders;
                 apiResponse.MultiValueHeaders = apiResonseMultiValueHeaders;
 
-                apiResponseBody.Message       = e.Message + e.StackTrace;
+                apiResponseBody.Message       = e.Message /* + e.StackTrace */;
                 apiResponse.Body              = JsonSerializer.Serialize(apiResponseBody);
 
                 return apiResponse;
