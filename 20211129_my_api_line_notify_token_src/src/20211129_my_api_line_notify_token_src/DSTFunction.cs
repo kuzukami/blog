@@ -11,37 +11,48 @@ using System.Threading.Tasks;
 
 using Amazon.Lambda;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.APIGatewayEvents;
+using _20211129_my_api_line_notify_token_src;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+// [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace _20211129_my_api_line_notify_token_dst
 {
+    
+
+
     public class Function
     {
-        public ApiResponse FunctionHandler(object input, ILambdaContext context)
+        public ApiResponse FunctionHandler(APIGatewayProxyRequest apiRequest, ILambdaContext context)
         {
             try
             {
-                ApiRequest apiRequest         = JsonSerializer.Deserialize<ApiRequest>(input.ToString(), ApiUtil.GetJsonSerializerOptionsDefault());
-                ApiRequestBody apiRequestBody = (apiRequest.Body == null) ? new ApiRequestBody() : JsonSerializer.Deserialize<ApiRequestBody>(apiRequest.Body, ApiUtil.GetJsonSerializerOptionsDefault());
+                // ApiRequest apiRequest         = JsonSerializer.Deserialize<ApiRequest>(input.ToString(), ApiUtil.GetJsonSerializerOptionsDefault());
+                // ApiRequestBody apiRequestBody = (apiRequest.Body == null) ? new ApiRequestBody() : JsonSerializer.Deserialize<ApiRequestBody>(apiRequest.Body, ApiUtil.GetJsonSerializerOptionsDefault());
 
                 ApiResponse apiResponse                   = new ApiResponse();
                 ApiResponseBody apiResponseBody           = new ApiResponseBody();
 
+
+                string baseurlWoSL = _20211129_my_api_line_notify_token_src.Helper.baseURLWoTailingSlash( apiRequest );
+                context.Logger.LogInformation($"request base url: {baseurlWoSL}");
+
+
                 string targetParamKey = "code";
-                string accessCode     = "";
+                // string accessCode     = "";
 
-                Dictionary<string, string>.KeyCollection paramKeys = apiRequest.QueryStringParameters.Keys;
-                foreach( string paramKey in paramKeys )
-                {
-                    if(paramKey == targetParamKey)
-                    {
-                        accessCode = apiRequest.QueryStringParameters[targetParamKey];
-                    }
-                }
+                // Dictionary<string, string>.KeyCollection paramKeys = apiRequest.QueryStringParameters.Keys;
+                // foreach( string paramKey in apiRequest.QueryStringParameters.Keys )
+                // {
+                //     if(paramKey == targetParamKey)
+                //     {
+                //         accessCode = apiRequest.QueryStringParameters[targetParamKey];
+                //     }
+                // }
+                string accessCode = _20211129_my_api_line_notify_token_src.Helper.queryParameterValueOrDefault( targetParamKey,  apiRequest , "");
 
-                apiResponseBody.Message = LineNotifyRedirect(accessCode).Result;
+                apiResponseBody.Message = LineNotifyRedirect( apiRequest, accessCode, context.Logger ).Result;
 
                 Dictionary<string, string> apiResonseHeaders             = new Dictionary<string, string>{{"Access-Control-Allow-Origin", "*"},{"Access-Control-Allow-Headers", "Content-Type"}, {"Access-Control-Allow-Methods", "GET"}, {"Lambda-Result-Code", ApiUtil.RESULT_CODE_SUCCESS}, {"Lambda-Result-Message", ApiUtil.GetResultCodeDictionary()[ApiUtil.RESULT_CODE_SUCCESS]}};
                 Dictionary<string, string[]> apiResonseMultiValueHeaders = new Dictionary<string, string[]>{{"Set-Cookie", new string[] {"KEY1=VALUE1; SameSite=None", "KEY2=VALUE2; SameSite=None"}}};
@@ -73,55 +84,8 @@ namespace _20211129_my_api_line_notify_token_dst
             }
         }
 
-        private string enforceEnvVar( String envkey ){
-                var environmentvalNullable = Environment.GetEnvironmentVariable(envkey);
 
-                if ( environmentvalNullable == null ){
-                    throw new Exception("必要な環境変数が設定されていません" + envkey);
-                }
-
-
-                return environmentvalNullable;
-        }
-
-        private byte[] utf8bytes(String val ){
-            return Encoding.UTF8.GetBytes(val);
-        }
-        private string computeHMACForUTF8String( string targetString, string hmacKey ){
-                using (var hmacSha512 = new System.Security.Cryptography.HMACSHA512( utf8bytes(hmacKey)) )
-                {
-                    byte[] hashValue = hmacSha512.ComputeHash( utf8bytes(targetString));
-                    // Console.WriteLine(BitConverter.ToString(hashValue).Replace("-", "").ToLower());
-                    var hash = new StringBuilder();
-                    foreach (var theByte in hashValue)
-                    {
-                        hash.Append(theByte.ToString("x2"));
-                    }
-                    return  hash;
-                }
-        }
-
-        private string computeSignedState(){
-                var stateSignKey = enforceEnvVar("LINNOAX_STATE_SIGN_KEY");//SHA512でデッドラインSignedを行う
-                var stateValidPeriod = enforceEnvVar("LINNOAX_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
-
-                var nowx = DateTime.Now;
-
-                var unixnow = new DateTimeOffset(nowx).ToUnixTimeSeconds();
-
-                var extendedValidEndUnitSec = unixnow + long.Parse(stateValidPeriod);
-
-                var extendedValidEnd = DateTimeOffset.FromUnixTimeSeconds(extendedValidEndUnitSec);
-
-                var extendedValidEndString = extendedValidEnd.Date.ToString("yyyyMMddHHmmss");
-
-                var signedValidEnd =  extendedValidEndString + computeHMACForUTF8String( extendedValidEndString, stateSignKey );
-
-                return signedValidEnd;
-        }
-
-
-        private async Task<string> LineNotifyRedirect(string code)
+        private async Task<string> LineNotifyRedirect( APIGatewayProxyRequest req, string code, ILambdaLogger log )
         {
             try
             {
@@ -132,9 +96,9 @@ namespace _20211129_my_api_line_notify_token_dst
                 request.RequestUri = new Uri("https://notify-bot.line.me/oauth/token");
                 request.Method     = HttpMethod.Post;
 
-                string redirect_uri  =  enforceEnvVar("LINNOA1_REDIRECT_URI");//redirect_uri	必須	uri	authorization endpoint API に指定した redirect_uri を指定します
-                string client_id    = enforceEnvVar("LINNOAX_CLIENT_ID");//"管理画面から取得してね！";
-                string client_secret =  enforceEnvVar("LINNOAX_CLIENT_SECRET");
+                string redirect_uri  =  _20211129_my_api_line_notify_token_src.LineAPI.LineRedirectURL.apiURL( req ) ; //_20211129_my_api_line_notify_token_src.Function.enforceEnvVar("LINNOA1_REDIRECT_URI");//redirect_uri	必須	uri	authorization endpoint API に指定した redirect_uri を指定します
+                string client_id    = _20211129_my_api_line_notify_token_src.EnvVar.LINNOAX_CLIENT_ID.getEnforced(); //.enforceEnvVar("LINNOAX_CLIENT_ID");//"管理画面から取得してね！";
+                string client_secret =  _20211129_my_api_line_notify_token_src.EnvVar.LINNOAX_CLIENT_SECRET.getEnforced();// enforceEnvVar("LINNOAX_CLIENT_SECRET");
                 // string redirect_uri  = "API2のURLを指定してね！";
                 // string client_id     = "管理画面から取得してね！";
                 // string client_secret = "管理画面から取得してね！";
@@ -159,7 +123,7 @@ namespace _20211129_my_api_line_notify_token_dst
                 LineNotifyResponse lineNotifyResponse = JsonSerializer.Deserialize<LineNotifyResponse>(responseContent, ApiUtil.GetJsonSerializerOptionsDefault());
 
                 var accode = lineNotifyResponse.AccessToken;
-                LambdaLogger.LogDebug("access_token: " + accode);
+                log.LogDebug("access_token: " + accode);
                 // lineNotifyResponse から access_token を取り出して、システム側で保管する
 
                 return lineNotifyResponse.Message;
@@ -422,29 +386,29 @@ namespace _20211129_my_api_line_notify_token_dst
 
     #region api response
 
-    public class ApiResponse
-    {
-        [JsonPropertyName("isBase64Encoded")]
-        public bool IsBase64Encoded { get; set; }
+    // public class ApiResponse
+    // {
+    //     [JsonPropertyName("isBase64Encoded")]
+    //     public bool IsBase64Encoded { get; set; }
 
-        [JsonPropertyName("statusCode")]
-        public HttpStatusCode StatusCode { get; set; }
+    //     [JsonPropertyName("statusCode")]
+    //     public HttpStatusCode StatusCode { get; set; }
 
-        [JsonPropertyName("headers")]
-        public Dictionary<string, string> Headers { get; set; }
+    //     [JsonPropertyName("headers")]
+    //     public Dictionary<string, string> Headers { get; set; }
 
-        [JsonPropertyName("multiValueHeaders")]
-        public Dictionary<string, string[]> MultiValueHeaders { get; set; }
+    //     [JsonPropertyName("multiValueHeaders")]
+    //     public Dictionary<string, string[]> MultiValueHeaders { get; set; }
 
-        [JsonPropertyName("body")]
-        public string Body { get; set; }
-    }
+    //     [JsonPropertyName("body")]
+    //     public string Body { get; set; }
+    // }
 
-    public class ApiResponseBody
-    {
-        [JsonPropertyName("message")]
-        public string Message { get; set; }
-    }
+    // public class ApiResponseBody
+    // {
+    //     [JsonPropertyName("message")]
+    //     public string Message { get; set; }
+    // }
 
     #endregion api response
 

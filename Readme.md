@@ -10,17 +10,23 @@
 
 ## 実際にデプロイするもの
 
-以下を参考にする。
+以下を参考にする。デプロイはAPI1, API2が同時にアクセスされる
 
 1. 注意 AWS Credential は　~/.aws/credentials ファイルに書き出す。（環境変数が貫通しなかった）
 1. 注意 -rs True オプションで serverless用の標準S3バケットが生成される
 1. 注意 -sn スタック名では基本自由
+1. 注意 --template-parameters は Lineのコンソールから取得したclientid,clientsecretを代入する(クレデンシャル)
 
+```bash
+$ cd 20211129_my_api_line_notify_token_src/src/20211129_my_api_line_notify_token_src
+$ dotnet lambda deploy-serverless -rs True -sn Yikes230131 --template-parameters 'LineClientId=arginjectid;LineClientSecret=arginjectsecret'
+```
 
-| ソース | 目的 | デプロイコマンド |
+## ソース
+| ソース | 目的 | URL例 |
 | --- | --- | --- |
-| [API1](20211129_my_api_line_notify_token_src) | NotifyAPIのToken取得API１段目 | ( cd 20211129_my_api_line_notify_token_src/src/20211129_my_api_line_notify_token_src; dotnet lambda deploy-serverless -rs True -sn LINREG_AP1 ) |
-| [API2](20211129_my_api_line_notify_token_dst) | NotifyAPIのToken取得API2段目(Tokenを得る) | ( cd 20211129_my_api_line_notify_token_dst/src/20211129_my_api_line_notify_token_dst; dotnet lambda deploy-serverless -rs True -sn LINREG_AP2 ) |
+| [API1](20211129_my_api_line_notify_token_src/src/20211129_my_api_line_notify_token_src/Function.cs) | NotifyAPIのToken取得API１段目 | https://53gfzu4qnd.execute-api.ap-northeast-1.amazonaws.com/Prod/api1 |
+| [API2](20211129_my_api_line_notify_token_src/src/20211129_my_api_line_notify_token_src/DSTFunction.cs) | NotifyAPIのToken取得API2段目(Tokenを得る) | https://53gfzu4qnd.execute-api.ap-northeast-1.amazonaws.com/Prod/api2 |
 
 
 ## メモ

@@ -1,41 +1,54 @@
-{
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "An AWS Serverless Application.",
-  "Resources": {
-    "Get": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        "Architectures": [
-          "x86_64"
-        ],
-        "Handler": "20211129_my_api_line_notify_token_src::_20211129_my_api_line_notify_token_src.Functions::Get",
-        "Runtime": "dotnet6",
-        "CodeUri": "",
-        "MemorySize": 256,
-        "Timeout": 30,
-        "Role": null,
-        "Policies": [
-          "AWSLambdaBasicExecutionRole"
-        ],
-        "Events": {
-          "RootGet": {
-            "Type": "Api",
-            "Properties": {
-              "Path": "/",
-              "Method": "GET"
-            }
-          }
-        }
-      }
-    }
-  },
-  "Outputs": {
-    "ApiURL": {
-      "Description": "API endpoint URL for Prod environment",
-      "Value": {
-        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
-      }
-    }
-  }
-}
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Serverless Application.
+
+Parameters:
+  LineClientId:
+    Type: String
+    Description: Lineの管理コンソ―ルから取得 ClientId
+    Default: hogehoge
+  LineClientSecret:
+    Type: String
+    Description: Lineの管理コンソ―ルから取得 ClientSecret
+    Default: abxxb
+
+Resources:
+  ANYAPI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures:
+      - x86_64
+      Handler: 20211129_my_api_line_notify_token_src::_20211129_my_api_line_notify_token_src.Functions::Get
+      Runtime: dotnet6
+      CodeUri: ''
+      MemorySize: 256
+      Timeout: 30
+      Role: null
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Environment:
+        Variables:
+        #         ///SHA512でデッドラインSignを行う
+        # public static EnvVar LINNOAX_STATE_SIGN_KEY = new EnvVar(){ keyword = "LINNOAX_STATE_SIGN_KEY" };
+            LINNOAX_STATE_SIGN_KEY: abcex
+        # ///署名の有効期間を秒数で指定する
+        # public static EnvVar LINNOAX_STATE_VALID_SECONDS = new EnvVar() { keyword = "LINNOAX_STATE_VALID_SECONDS" };
+            LINNOAX_STATE_VALID_SECONDS: 1800
+        # ///管理画面から取得してね！ line_client_id
+        # public static EnvVar LINNOAX_CLIENT_ID = new EnvVar(){ keyword = "LINNOAX_CLIENT_ID" };
+            LINNOAX_CLIENT_ID: !Ref LineClientId
+        # //  string client_secret =  _20211129_my_api_line_notify_token_src.Function.enforceEnvVar("LINNOAX_CLIENT_SECRET");
+        # ///管理画面から取得してね！ line_client_secret
+        # public static EnvVar LINNOAX_CLIENT_SECRET = new EnvVar(){ keyword = "LINNOAX_CLIENT_SECRET" };
+            LINNOAX_CLIENT_SECRET: !Ref  LineClientSecret
+      Events:
+        RootGet:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+Outputs:
+  ApiURL:
+    Description: API endpoint URL for Prod environment
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/

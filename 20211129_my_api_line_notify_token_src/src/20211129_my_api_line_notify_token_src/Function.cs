@@ -19,6 +19,7 @@ using Amazon.Lambda.APIGatewayEvents;
 
 namespace _20211129_my_api_line_notify_token_src
 {
+
     public class Function
     {
         public ApiResponse FunctionHandler(APIGatewayProxyRequest input, ILambdaContext context)
@@ -29,10 +30,13 @@ namespace _20211129_my_api_line_notify_token_src
                 // ApiRequestBody apiRequestBody = (apiRequest.Body == null) ? new ApiRequestBody() : JsonSerializer.Deserialize<ApiRequestBody>(apiRequest.Body, ApiUtil.GetJsonSerializerOptionsDefault());
 
 
+                string baseurlWoSL = Helper.baseURLWoTailingSlash( input );
+                context.Logger.LogInformation($"request base url: {baseurlWoSL}");
+
                 ApiResponse apiResponse                   = new ApiResponse();
                 List<ApiResponseBody> apiResponseBodyList = new List<ApiResponseBody>();
                 ApiResponseBody apiResponseBody           = new ApiResponseBody();
-                var redirectURL = LineNotifyRedirect();
+                var redirectURL = LineNotifyRedirect(input);
                 Dictionary<string, string> apiResonseHeaders             = new Dictionary<string, string>{{"Access-Control-Allow-Origin", "*"},{"Access-Control-Allow-Headers", "Content-Type"}, {"Access-Control-Allow-Methods", "GET"}, {"Location", redirectURL} , {"Content-Type", "application/json; charset=UTF-8"}};
                 Dictionary<string, string[]> apiResonseMultiValueHeaders = new Dictionary<string, string[]>{{"Set-Cookie", new string[] {"KEY1=VALUE1; SameSite=None", "KEY2=VALUE2; SameSite=None"}}};
                 
@@ -63,21 +67,11 @@ namespace _20211129_my_api_line_notify_token_src
                 return apiResponse;
             }
         }
-        private string enforceEnvVar( String envkey ){
-                var environmentvalNullable = Environment.GetEnvironmentVariable(envkey);
 
-                if ( environmentvalNullable == null ){
-                    throw new Exception("必要な環境変数が設定されていません" + envkey);
-                }
-
-
-                return environmentvalNullable;
-        }
-
-        private byte[] utf8bytes(String val ){
+        public static byte[] utf8bytes(String val ){
             return Encoding.UTF8.GetBytes(val);
         }
-        private string computeHMACForUTF8String( string targetString, string hmacKey ){
+        public static string computeHMACForUTF8String( string targetString, string hmacKey ){
                 using (var hmacSha512 = new System.Security.Cryptography.HMACSHA512( utf8bytes(hmacKey)) )
                 {
                     byte[] hashValue = hmacSha512.ComputeHash( utf8bytes(targetString));
@@ -91,9 +85,9 @@ namespace _20211129_my_api_line_notify_token_src
                 }
         }
 
-        private string computeSignedState(){
-                var stateSignKey = enforceEnvVar("LINNOAX_STATE_SIGN_KEY");//SHA512でデッドラインSignedを行う
-                var stateValidPeriod = enforceEnvVar("LINNOAX_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
+        public static string computeSignedState(){
+                var stateSignKey = EnvVar.LINNOAX_STATE_SIGN_KEY.getEnforced();//SHA512でデッドラインSignedを行う
+                var stateValidPeriod =  EnvVar.LINNOAX_STATE_VALID_SECONDS.getEnforced(); //enforceEnvVar("LINNOAX_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
 
                 var nowx = DateTime.Now;
 
@@ -110,12 +104,12 @@ namespace _20211129_my_api_line_notify_token_src
                 return signedValidEnd;
         }
 
-        private string LineNotifyRedirect()
+        private string LineNotifyRedirect( APIGatewayProxyRequest req )
         {
             try
             {
-                string client_id    = enforceEnvVar("LINNOAX_CLIENT_ID");//"管理画面から取得してね！";
-                string redirect_uri = enforceEnvVar("LINNOA1_REDIRECT_URI"); //"API2のURLを指定してね！"
+                string client_id    =  EnvVar.LINNOAX_CLIENT_ID.getEnforced(); // enforceEnvVar("LINNOAX_CLIENT_ID");//"管理画面から取得してね！";
+                string redirect_uri = LineAPI.API2.apiURL( req ); // enforceEnvVar("LINNOA1_REDIRECT_URI"); //"API2のURLを指定してね！"
                 string state        = computeSignedState(); //"LINE notify APIからAPI2にリダイレクトされるときに渡してくれるパラメータだよ。送信元の認証に使えるかも！"
 
                 var parameters = new Dictionary<string, string>()
