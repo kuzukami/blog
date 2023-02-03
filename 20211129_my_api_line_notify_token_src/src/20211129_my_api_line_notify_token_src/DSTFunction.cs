@@ -123,7 +123,7 @@ namespace _20211129_my_api_line_notify_token_dst
                 LineNotifyResponse lineNotifyResponse = JsonSerializer.Deserialize<LineNotifyResponse>(responseContent, ApiUtil.GetJsonSerializerOptionsDefault());
 
                 var accode = lineNotifyResponse.AccessToken;
-                log.LogDebug("access_token: " + accode);
+                log.LogInformation("access_token: " + accode);
                 // lineNotifyResponse から access_token を取り出して、システム側で保管する
 
                 return lineNotifyResponse.Message;

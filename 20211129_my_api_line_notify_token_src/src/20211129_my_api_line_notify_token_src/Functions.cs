@@ -138,7 +138,7 @@ namespace _20211129_my_api_line_notify_token_src;
 
         public static LineAPI API2 = new LineAPI(){
             apiNameAsRelativePath = "/api2",
-            httpMethod = "POST",
+            httpMethod = "GET",
             apiRoutine = ( req, lamcon ) => { return  refineResponse( new _20211129_my_api_line_notify_token_dst.Function().FunctionHandler(req, lamcon ) );},
         };
 
