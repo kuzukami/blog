@@ -91,7 +91,7 @@ namespace _20211129_my_api_line_notify_token_src
                 //enforceEnvVar("LINNOAX_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
                 var stateValidPeriod_in_secs =  Double.Parse( EnvVar.LINNOAX_STATE_VALID_SECONDS.getEnforced() );
 
-                return manid.buildJWE(stateSignKey, stateValidPeriod_in_secs);
+                return manid.buildJWE(stateSignKey, TimeSpan.FromSeconds( stateValidPeriod_in_secs ));
         }
 
         private string LineNotifyRedirect( APIGatewayProxyRequest req)

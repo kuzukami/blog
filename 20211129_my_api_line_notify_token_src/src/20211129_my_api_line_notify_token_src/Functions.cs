@@ -32,7 +32,6 @@ namespace _20211129_my_api_line_notify_token_src;
     public class EnvVar{
         private String keyword;
 
-
         private static string enforceEnvVar( String envkey ){
                 var environmentvalNullable = Environment.GetEnvironmentVariable(envkey);
 
@@ -44,17 +43,17 @@ namespace _20211129_my_api_line_notify_token_src;
                 return environmentvalNullable;
         }
 
-        public String getOrDefault( String defaultValue ){
-            var environmentvalNullable = Environment.GetEnvironmentVariable(this.keyword);
+        // public String getOrDefault( String defaultValue ){
+        //     var environmentvalNullable = Environment.GetEnvironmentVariable(this.keyword);
 
-            if ( environmentvalNullable == null ){
-                return defaultValue;
-            }
-            return environmentvalNullable;
-        }
+        //     if ( environmentvalNullable == null ){
+        //         return defaultValue;
+        //     }
+        //     return environmentvalNullable;
+        // }
 
         public String getEnforced(){
-            return enforceEnvVar( this.keyword );
+            return byInitializedVariable( this );
         }
         public static byte[] FromHex(string hex)
         {
@@ -83,6 +82,34 @@ namespace _20211129_my_api_line_notify_token_src;
         //  string client_secret =  _20211129_my_api_line_notify_token_src.Function.enforceEnvVar("LINNOAX_CLIENT_SECRET");
         ///管理画面から取得してね！ line_client_secret
         public static EnvVar LINNOAX_CLIENT_SECRET = new EnvVar(){ keyword = "LINNOAX_CLIENT_SECRET" };
+
+        private static Dictionary<EnvVar,string> varValues = null;
+
+        private static string byInitializedVariable( EnvVar envkey ){
+            if ( varValues == null ){
+                initializeByEnviromentVariables();
+            }
+            if ( varValues.ContainsKey(envkey ) ){
+                return varValues[envkey];
+            }else{
+                throw new Exception("必要な環境変数が設定されていません" + envkey.keyword);
+            }
+        }
+
+
+        public static Dictionary<EnvVar,string> initializeByEnviromentVariables(){
+            var dic = new Dictionary<EnvVar, string>();
+            var vars = new List<EnvVar>(){ LINNOAX_STATE_KEY_HEXA, LINNOAX_STATE_VALID_SECONDS, LINOAX_IDTOKEN_SIGN_KEY_HEXA, LINNOAX_CLIENT_ID, LINNOAX_CLIENT_SECRET };
+
+            foreach ( var varx in vars ){
+                dic.Add(varx,  enforceEnvVar( varx.keyword ) );
+            }
+            return dic;
+        }
+
+        public static void setVarValues( Dictionary<EnvVar,string> values ){
+            varValues = values;
+        }
 
     }
     public static class Helper{
@@ -124,11 +151,11 @@ namespace _20211129_my_api_line_notify_token_src;
         [JsonProperty("managmentid")]   
         public string ManagementId { get; set; }
 
-        public string buildJWT( byte[] secret, double seconds_to_deadline){
+        public string buildJWT( byte[] secret, TimeSpan seconds_to_deadline){
             return buildIDJWT( ManagementId, secret, seconds_to_deadline );
         }
 
-        public string buildJWE( byte[] secret, double seconds_to_deadline){
+        public string buildJWE( byte[] secret, TimeSpan seconds_to_deadline){
             return buildIDJWE( ManagementId, secret, seconds_to_deadline );
         }
 
@@ -140,7 +167,7 @@ namespace _20211129_my_api_line_notify_token_src;
             return nonce;
         }
 
-        public static string buildIDJWE( string managementId, byte[] keySecret, double seconds_to_deadline ){
+        public static string buildIDJWE( string managementId, byte[] keySecret, TimeSpan seconds_to_deadline ){
 
             var jwt = buildIDJWT(managementId,  keySecret, seconds_to_deadline );
 
@@ -238,15 +265,15 @@ namespace _20211129_my_api_line_notify_token_src;
                     ManagementId = claimdic[ id_keyword ].ToString()
                 };
             }else{
-                throw new Exception($"Tokenに{id_keyword}キーが入っていません");
+                throw new Exception($"E002.Tokenに{id_keyword}キーが入っていません");
             }
         }
 
-        private static DateTime expirationEpoch( double seconds_to_deadline  ){
-            return DateTime.Now.AddSeconds(seconds_to_deadline);
+        private static DateTime expirationEpoch( TimeSpan seconds_to_deadline  ){
+            return DateTime.Now.AddMilliseconds(seconds_to_deadline.TotalMilliseconds);
         }
 
-        public static string buildIDJWT( string managementId, byte[] signSecret, double seconds_to_deadline ){
+        public static string buildIDJWT( string managementId, byte[] signSecret, TimeSpan seconds_to_deadline ){
 
             var handler = new JsonWebTokenHandler();
 
@@ -309,7 +336,7 @@ namespace _20211129_my_api_line_notify_token_src;
                 return fromPlainClaimDic( result.Claims );
             }else{
                 // Console.WriteLine(result.ToString());
-                throw new Exception("JWTトークンの検証に失敗しました", result.Exception);
+                throw new Exception("E001.JWTトークンの検証に失敗しました", result.Exception);
             }
 
         //     //仕様によればexp検証は強制
@@ -378,7 +405,7 @@ namespace _20211129_my_api_line_notify_token_src;
                 //idtokenクエリパラメータ中のJWTトークンを検証してIDとする
                 return
                     LineNotifyManagerJson.fromIDJWT(
-                            Helper.headerValueOrDefault("idtoken", req, "_not_specified_"),
+                            Helper.queryParameterValueOrDefault("idtoken", req, "_not_specified_"),
                             EnvVar.LINOAX_IDTOKEN_SIGN_KEY_HEXA.getEnforcedAsHexa()
                             ); },
 
@@ -393,7 +420,7 @@ namespace _20211129_my_api_line_notify_token_src;
                 //stateクエリパラメータ中のJWEトークンを検証してIDとする
                 return
                     LineNotifyManagerJson.fromIDJWE(
-                            Helper.headerValueOrDefault("state", req, "_not_specified_"),
+                            Helper.queryParameterValueOrDefault("state", req, "_not_specified_"),
                             EnvVar.LINNOAX_STATE_KEY_HEXA.getEnforcedAsHexa()
                             ); },
 
