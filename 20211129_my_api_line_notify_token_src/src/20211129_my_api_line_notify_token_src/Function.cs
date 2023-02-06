@@ -85,32 +85,23 @@ namespace _20211129_my_api_line_notify_token_src
                 }
         }
 
-        public static string computeSignedState(){
-                var stateSignKey = EnvVar.LINNOAX_STATE_SIGN_KEY.getEnforced();//SHA512でデッドラインSignedを行う
-                var stateValidPeriod =  EnvVar.LINNOAX_STATE_VALID_SECONDS.getEnforced(); //enforceEnvVar("LINNOAX_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
+        public static string computeSignedState(LineNotifyManagerJson manid){
+                //JWEの暗号化署名キー
+                var stateSignKey = EnvVar.LINNOAX_STATE_KEY_HEXA.getEnforcedAsHexa();
+                //enforceEnvVar("LINNOAX_STATE_VALID_SECONDS");//署名の有効期間を秒数で指定する
+                var stateValidPeriod_in_secs =  Double.Parse( EnvVar.LINNOAX_STATE_VALID_SECONDS.getEnforced() );
 
-                var nowx = DateTime.Now;
-
-                var unixnow = new DateTimeOffset(nowx).ToUnixTimeSeconds();
-
-                var extendedValidEndUnitSec = unixnow + long.Parse(stateValidPeriod);
-
-                var extendedValidEnd = DateTimeOffset.FromUnixTimeSeconds(extendedValidEndUnitSec);
-
-                var extendedValidEndString = extendedValidEnd.Date.ToString("yyyyMMddHHmmss");
-
-                var signedValidEnd =  extendedValidEndString + computeHMACForUTF8String( extendedValidEndString, stateSignKey );
-
-                return signedValidEnd;
+                return manid.buildJWE(stateSignKey, stateValidPeriod_in_secs);
         }
 
-        private string LineNotifyRedirect( APIGatewayProxyRequest req )
+        private string LineNotifyRedirect( APIGatewayProxyRequest req)
         {
             try
             {
+                LineNotifyManagerJson manid = LineAPI.API1.extractVerifiedManagementId(req);
                 string client_id    =  EnvVar.LINNOAX_CLIENT_ID.getEnforced(); // enforceEnvVar("LINNOAX_CLIENT_ID");//"管理画面から取得してね！";
                 string redirect_uri = LineAPI.API2.apiURL( req ); // enforceEnvVar("LINNOA1_REDIRECT_URI"); //"API2のURLを指定してね！"
-                string state        = computeSignedState(); //"LINE notify APIからAPI2にリダイレクトされるときに渡してくれるパラメータだよ。送信元の認証に使えるかも！"
+                string state        = computeSignedState(manid); //"LINE notify APIからAPI2にリダイレクトされるときに渡してくれるパラメータだよ。送信元の認証に使えるかも！"
 
                 var parameters = new Dictionary<string, string>()
                 {

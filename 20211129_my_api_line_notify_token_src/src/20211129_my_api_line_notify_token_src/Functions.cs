@@ -1,6 +1,17 @@
 using System.Net;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
+// using JWT.Algorithms;
+// using JWT.Builder;
+// using JWT;
+// using JWT.Algorithms;
+// using JWT.Builder;
+using Newtonsoft.Json;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
+using System.Buffers.Binary;
+using System.Text;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -45,10 +56,26 @@ namespace _20211129_my_api_line_notify_token_src;
         public String getEnforced(){
             return enforceEnvVar( this.keyword );
         }
-        ///SHA512でデッドラインSignを行う
-        public static EnvVar LINNOAX_STATE_SIGN_KEY = new EnvVar(){ keyword = "LINNOAX_STATE_SIGN_KEY" };
-        ///署名の有効期間を秒数で指定する
+        public static byte[] FromHex(string hex)
+        {
+            hex = hex.Replace("-", "");
+            byte[] raw = new byte[hex.Length / 2];
+            for (int i = 0; i < raw.Length; i++)
+            {
+                raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+            }
+            return raw;
+        }
+
+        public byte[] getEnforcedAsHexa(){
+            return FromHex(getEnforced());
+        }
+        ///ラインとユーザーエージェント経由で行って戻ってくるSTATE-TOKENはJWE+JWTで暗号化(HMAC256,AES256-GCM)なので、256bitのhexa(64桁)指定
+        public static EnvVar LINNOAX_STATE_KEY_HEXA = new EnvVar(){ keyword = "LINNOAX_STATE_KEY_HEXA" };
+        ///TOKENの有効期間を秒数で指定する
         public static EnvVar LINNOAX_STATE_VALID_SECONDS = new EnvVar() { keyword = "LINNOAX_STATE_VALID_SECONDS" };
+
+        public static EnvVar LINOAX_IDTOKEN_SIGN_KEY_HEXA = new EnvVar(){ keyword = "LINOAX_IDTOKEN_SIGN_KEY_HEXA" };
 
         ///管理画面から取得してね！ line_client_id
         public static EnvVar LINNOAX_CLIENT_ID = new EnvVar(){ keyword = "LINNOAX_CLIENT_ID" };
@@ -89,13 +116,225 @@ namespace _20211129_my_api_line_notify_token_src;
         public static String accessPath( APIGatewayProxyRequest input){
             return apiPath( input, input.Path );
         }
+
+    }
+
+
+    public class LineNotifyManagerJson{
+        [JsonProperty("managmentid")]   
+        public string ManagementId { get; set; }
+
+        public string buildJWT( byte[] secret, double seconds_to_deadline){
+            return buildIDJWT( ManagementId, secret, seconds_to_deadline );
+        }
+
+        public string buildJWE( byte[] secret, double seconds_to_deadline){
+            return buildIDJWE( ManagementId, secret, seconds_to_deadline );
+        }
+
+        public static byte[] aesgcmNonce(){
+            var nonce = new byte[AesGcm.NonceByteSizes.MaxSize]; // MaxSize = 12
+            RandomNumberGenerator.Fill(nonce);
+            var epochSecLong = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            BinaryPrimitives.WriteInt32BigEndian( nonce.AsSpan(0, 4), (int)epochSecLong );
+            return nonce;
+        }
+
+        public static string buildIDJWE( string managementId, byte[] keySecret, double seconds_to_deadline ){
+
+            var jwt = buildIDJWT(managementId,  keySecret, seconds_to_deadline );
+
+            //see https://www.scottbrady91.com/c-sharp/aes-gcm-dotnet
+            using var aes = new AesGcm(keySecret);
+            var nonce = aesgcmNonce();
+
+            var plaintextBytes = Encoding.UTF8.GetBytes(jwt);
+            var ciphertext = new byte[plaintextBytes.Length];
+            var tag = new byte[AesGcm.TagByteSizes.MaxSize]; // MaxSize = 16
+
+            aes.Encrypt(nonce, plaintextBytes, ciphertext, tag);
+          
+            //Nonce (12B) | Ciphertext (*B) | Tag (16B)
+            return  Convert.ToHexString( nonce.Concat( ciphertext ).Concat( tag ).ToArray() );
+
+            //実装失敗、AES直接のケースで動かない
+            // var handler = new JsonWebTokenHandler();
+
+            // var symkey = new SymmetricSecurityKey(keySecret);
+
+            // string token = handler.CreateToken(new SecurityTokenDescriptor
+            // {
+            //     Audience = "api2",
+            //     // Issuer = "https://idp.example.com",
+            //     // Claims = new Dictionary<string, object> { { "sub", "811e790749a24d8a8f766e1a44dca28a" } },
+            //     Expires = expirationEpoch( seconds_to_deadline ), 
+
+            //     // private key for signing
+            //     SigningCredentials = new SigningCredentials(symkey, SecurityAlgorithms.HmacSha256),
+
+            //     // public key for encryption
+            //     EncryptingCredentials = new EncryptingCredentials( symkey, SecurityAlgorithms.Aes128CbcHmacSha256, SecurityAlgorithms.Aes256Gcm),
+
+            //     Claims =  myClaimDic(managementId),
+            // });
+
+            // return token;
+        }
+
+        public static LineNotifyManagerJson fromIDJWE( string jwe_token, byte[] keySecret ){
+            byte[] encryptedRAW = Convert.FromHexString( jwe_token );
+            //see https://www.scottbrady91.com/c-sharp/aes-gcm-dotnet
+            using var aes = new AesGcm(keySecret);
+
+            var nonce =         encryptedRAW.AsSpan(0,                                       aesgcmNonce().Length);
+            var ciphertext =    encryptedRAW.AsSpan(nonce.Length,                            encryptedRAW.Length - AesGcm.TagByteSizes.MaxSize - nonce.Length );
+            var tag =           encryptedRAW.AsSpan(nonce.Length + ciphertext.Length,        AesGcm.TagByteSizes.MaxSize ); // MaxSize = 16
+
+            var plaintextBytes = new byte[ciphertext.Length];
+            aes.Decrypt(nonce, ciphertext, tag, plaintextBytes);
+
+            string jwt =  Encoding.UTF8.GetString(plaintextBytes);
+
+            return fromIDJWT(jwt, keySecret);
+
+            //実装失敗、AES直接のケースで動かない
+            // var handler = new JsonWebTokenHandler();
+            // var symkey = new SymmetricSecurityKey(keySecret);
+
+            // var algorithmSpec =new List<string>() { SecurityAlgorithms.Aes256Gcm };
+            // TokenValidationResult result = handler.ValidateToken(
+            //     jwe_token,
+            //     new TokenValidationParameters
+            //     {
+            //         ValidAudience = "api2",
+            //         // ValidIssuer = "https://idp.example.com",
+            //         ValidateIssuer = false,
+            //         ValidateLifetime = true,
+            //         RequireExpirationTime = true,
+            //         // private key for encryption
+            //         ValidAlgorithms = algorithmSpec,
+            //         IssuerSigningKey = symkey,
+            //         TokenDecryptionKey = symkey,
+            //         ClockSkew = TimeSpan.Zero,
+            //     });
+
+
+            // if ( result.IsValid ) {
+            //     return fromPlainClaimDic( result.Claims );
+            // }else{
+            //     Console.WriteLine(result.ToString());
+            //     throw new Exception("JWEトークンの検証に失敗しました");
+            // }
+        }
+
+        ///JWT内でユーザー名を表すカスタムクレームキー
+        private static string id_keyword = "managementid";
+        private static  IDictionary<string, object> myClaimDic( string magementId ){
+            return new Dictionary<string, object> { { id_keyword , magementId } }; } 
+
+        private static LineNotifyManagerJson fromPlainClaimDic( IDictionary<string, object> claimdic ){
+            if ( claimdic.ContainsKey( id_keyword ) ){
+                return new LineNotifyManagerJson{
+                    ManagementId = claimdic[ id_keyword ].ToString()
+                };
+            }else{
+                throw new Exception($"Tokenに{id_keyword}キーが入っていません");
+            }
+        }
+
+        private static DateTime expirationEpoch( double seconds_to_deadline  ){
+            return DateTime.Now.AddSeconds(seconds_to_deadline);
+        }
+
+        public static string buildIDJWT( string managementId, byte[] signSecret, double seconds_to_deadline ){
+
+            var handler = new JsonWebTokenHandler();
+
+            var symkey = new SymmetricSecurityKey(signSecret);
+
+            string token = handler.CreateToken(new SecurityTokenDescriptor
+            {
+                // Issuer = "https://idp.example.com",
+                // Claims = new Dictionary<string, object> { { "sub", "811e790749a24d8a8f766e1a44dca28a" } },
+                Expires = expirationEpoch( seconds_to_deadline ), 
+
+                // private key for signing
+                SigningCredentials = new SigningCredentials(symkey, SecurityAlgorithms.HmacSha256),
+
+                Claims =  myClaimDic(managementId),
+            });
+
+            return token;
+
+            // LineNotifyManagerJson l = new LineNotifyManagerJson{
+            //     ManagementId = managementId
+            // };
+
+            // var jwtToken = new JwtBuilder()
+            //     .WithAlgorithm(new HMACSHA256Algorithm())
+            //     .WithSecret(secret)
+            //     .ExpirationTime( expirationEpoch(seconds_to_deadline).ToUnixTimeSeconds() )
+            //     // .AddClaim("linenotifymanid", id)
+            //     // .AddClaim("data1", "hello!")
+            //     .Encode( l );
+
+            // // Console.WriteLine(jwtToken);
+            // return jwtToken;
+        }
+
+        public static LineNotifyManagerJson fromIDJWT( string jwtToken, byte[] signSecret ){
+            var handler = new JsonWebTokenHandler();
+            var symkey = new SymmetricSecurityKey(signSecret);
+
+            TokenValidationResult result = handler.ValidateToken(
+                jwtToken,
+                new TokenValidationParameters
+                {
+                    // ValidAudience = "api2",
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    // ValidIssuer = "https://idp.example.com",
+                    ValidateLifetime = true,
+                    RequireExpirationTime = true,
+                    // private key for encryption
+                    ValidAlgorithms = Enumerable.Repeat( SecurityAlgorithms.HmacSha256 ,1),
+                    IssuerSigningKey = symkey,
+                    // TokenDecryptionKey = symkey,
+                    ClockSkew = TimeSpan.Zero,
+                });
+
+
+
+            if ( result.IsValid ) {
+                return fromPlainClaimDic( result.Claims );
+            }else{
+                // Console.WriteLine(result.ToString());
+                throw new Exception("JWTトークンの検証に失敗しました", result.Exception);
+            }
+
+        //     //仕様によればexp検証は強制
+        // var jsonObj = new JwtBuilder()
+        // .WithSecret(secret)
+        // .WithAlgorithm(new HMACSHA256Algorithm())
+        // .MustVerifySignature()
+        // .Decode<LineNotifyManagerJson>(jwtToken)
+        // ;
+
+        // return jsonObj;
+
+        }
+
+
+
     }
 
     public class LineAPI{
         private String apiNameAsRelativePath;
         private String httpMethod;
+
         public Func<APIGatewayProxyRequest,ILambdaContext,APIGatewayProxyResponse> apiRoutine;
 
+        public Func<APIGatewayProxyRequest,LineNotifyManagerJson> extractVerifiedManagementId;
 
         public String apiURL( APIGatewayProxyRequest req ){
             string apiPath = Helper.apiPath( req , apiNameAsRelativePath);
@@ -134,12 +373,30 @@ namespace _20211129_my_api_line_notify_token_src;
             apiNameAsRelativePath = "/api1",
             httpMethod = "GET",
             apiRoutine = ( req, lamcon ) => { return  refineResponse( new Function().FunctionHandler(req, lamcon ) );},
+
+            extractVerifiedManagementId = ( req ) => {
+                //idtokenクエリパラメータ中のJWTトークンを検証してIDとする
+                return
+                    LineNotifyManagerJson.fromIDJWT(
+                            Helper.headerValueOrDefault("idtoken", req, "_not_specified_"),
+                            EnvVar.LINOAX_IDTOKEN_SIGN_KEY_HEXA.getEnforcedAsHexa()
+                            ); },
+
         };
 
         public static LineAPI API2 = new LineAPI(){
             apiNameAsRelativePath = "/api2",
             httpMethod = "GET",
             apiRoutine = ( req, lamcon ) => { return  refineResponse( new _20211129_my_api_line_notify_token_dst.Function().FunctionHandler(req, lamcon ) );},
+
+            extractVerifiedManagementId = ( req ) => {
+                //stateクエリパラメータ中のJWEトークンを検証してIDとする
+                return
+                    LineNotifyManagerJson.fromIDJWE(
+                            Helper.headerValueOrDefault("state", req, "_not_specified_"),
+                            EnvVar.LINNOAX_STATE_KEY_HEXA.getEnforcedAsHexa()
+                            ); },
+
         };
 
         public static List<LineAPI> apiSeries = new List<LineAPI>(){

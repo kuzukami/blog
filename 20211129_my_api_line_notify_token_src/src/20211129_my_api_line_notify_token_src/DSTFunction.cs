@@ -91,6 +91,8 @@ namespace _20211129_my_api_line_notify_token_dst
             {
                 string responseContent = "";
 
+                LineNotifyManagerJson manid = LineAPI.API2.extractVerifiedManagementId(req);
+
                 HttpRequestMessage request = new HttpRequestMessage();
 
                 request.RequestUri = new Uri("https://notify-bot.line.me/oauth/token");
@@ -123,7 +125,7 @@ namespace _20211129_my_api_line_notify_token_dst
                 LineNotifyResponse lineNotifyResponse = JsonSerializer.Deserialize<LineNotifyResponse>(responseContent, ApiUtil.GetJsonSerializerOptionsDefault());
 
                 var accode = lineNotifyResponse.AccessToken;
-                log.LogInformation("access_token: " + accode);
+                log.LogInformation($"managementId:{manid.ManagementId} access_token: {accode}");
                 // lineNotifyResponse から access_token を取り出して、システム側で保管する
 
                 return lineNotifyResponse.Message;
